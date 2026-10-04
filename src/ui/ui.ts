@@ -256,7 +256,7 @@ export class UI {
         inp.skillPressed[2] ||= input.padPressed(PAD.LB);
         inp.skillPressed[3] ||= input.padPressed(PAD.RB);
         inp.skillPressed[4] ||= input.padPressed(PAD.LT);
-        inp.skillPressed[5] ||= input.padPressed(PAD.Y) && false;
+        inp.skillPressed[5] ||= input.padPressed(PAD.RS);
       }
       inp.dodge = input.keyPressed('dodge') || input.padPressed(PAD.B);
       inp.tonic = input.keyPressed('tonic') || input.padPressed(PAD.UP);

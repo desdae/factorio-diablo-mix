@@ -41,7 +41,7 @@ Saves live in `localStorage` (3 slots + autosave, each with an automatic backup)
 | B | Construction mode — click to place, **drag to lay belts/walls/pylons**, R rotate, right-click (drag) remove, E pipette, X area-deconstruct, V capture blueprint, Tab switch category, 1–9 select |
 | I/C · K · T · H · P · M · J | Inventory/character · Skills · Research · Handcraft · Production stats · Map · Chronicle |
 | F3 / F4 · \` | Profiler overlay / power coverage · developer console |
-| Gamepad | Left stick move, right stick aim (auto-target when idle), A/RT primary, X secondary, LB/RB/LT skills, B dodge, Y interact, D-pad consumables, Start pause, Back map |
+| Gamepad | Left stick move, right stick aim (auto-target when idle), A/RT primary, X secondary, LB/RB/LT/RS-click skills 3–6, B dodge, Y interact, D-pad consumables, Start pause, Back map |
 
 ## What is in the build (the vertical slice, §78 of the brief)
 
