@@ -129,6 +129,22 @@ export class Game {
     this.player.hp = this.player.stats.maxLife;
     this.factoryCtx = this.makeFactoryCtx();
     this.overworld.explore(this.player.x, this.player.y, 14);
+    this.spawnTutorialHusks();
+  }
+
+  /** A small pack of weak husks on the road east of the Kindling Point teaches combat first (quest 1). */
+  private spawnTutorialHusks() {
+    const m = this.overworld;
+    const r = new Rng(this.seed ^ 0xbeef);
+    let placed = 0;
+    for (let tries = 0; tries < 200 && placed < 6; tries++) {
+      const a = r.range(-0.8, 0.8), d = r.range(11, 15);
+      const x = this.spawnPoint.x + Math.cos(a) * d, y = this.spawnPoint.y + Math.sin(a) * d;
+      if (!m.passable(Math.floor(x), Math.floor(y))) continue;
+      const e = spawnEnemy(this, this.over, 'husk', x, y, { level: 1 });
+      e.maxHp = e.hp = e.maxHp * 0.8;
+      placed++;
+    }
   }
 
   // ───────────────────────────── helpers

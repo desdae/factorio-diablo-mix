@@ -39,11 +39,13 @@ export const tooltip = {
     tipEl.innerHTML = html;
     tipEl.classList.remove('hidden');
     const r = tipEl.getBoundingClientRect();
+    const z = uiZoom();
     let tx = x + 18, ty = y + 14;
     if (tx + r.width > window.innerWidth - 8) tx = x - r.width - 18;
     if (ty + r.height > window.innerHeight - 8) ty = window.innerHeight - r.height - 8;
-    tipEl.style.left = `${Math.max(4, tx)}px`;
-    tipEl.style.top = `${Math.max(4, ty)}px`;
+    // #ui is CSS-zoomed for UI scaling: convert viewport pixels into its local coordinate space
+    tipEl.style.left = `${Math.max(4, tx) / z}px`;
+    tipEl.style.top = `${Math.max(4, ty) / z}px`;
   },
   hide(owner: unknown = null) {
     if (!tipEl) tipEl = $('tooltip');
@@ -59,4 +61,8 @@ export function tip<E extends HTMLElement>(e: E, html: () => string, wrap = fals
   e.addEventListener('mousemove', (ev) => tooltip.show(html(), ev.clientX, ev.clientY, e, wrap));
   e.addEventListener('mouseleave', () => tooltip.hide(e));
   return e;
+}
+
+export function uiZoom(): number {
+  return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--ui-scale')) || 1;
 }

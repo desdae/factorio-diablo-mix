@@ -127,7 +127,9 @@ export class Renderer {
     const pl = g.player;
     const lvl = g.playerLevel();
     // camera: smooth follow with look-ahead toward the cursor
-    const lookX = clamp((view.mouse.x - pl.x) * 0.12, -3, 3), lookY = clamp((view.mouse.y - pl.y) * 0.12, -2, 2);
+    // look-ahead toward the cursor in combat; a stable camera while constructing so placement never drifts
+    const look = view.buildMode ? 0 : 0.12;
+    const lookX = clamp((view.mouse.x - pl.x) * look, -3, 3), lookY = clamp((view.mouse.y - pl.y) * look, -2, 2);
     const k = 1 - Math.pow(0.0008, dt);
     this.camX += (pl.x + lookX - this.camX) * k;
     this.camY += (pl.y - 0.6 + lookY - this.camY) * k;
@@ -450,8 +452,17 @@ export class Renderer {
     const cx = x + b.w / 2, cy = y + b.h / 2;
     switch (b.kind) {
       case 'miner': {
-        const spin = work ? t * 8 : 0;
-        gearShape(ctx, cx, y - 0.35, 0.28, 8, spin, b.def.burner ? '#8a6a4a' : '#6a8aa0');
+        const spin = work ? t * 6 : 0;
+        // derrick: drill shaft with spiral flutes, a turning crown gear and a pulsing core
+        const top = y - 0.85, bot = y + 0.55;
+        ctx.fillStyle = '#2a2420'; ctx.fillRect(cx - 0.11, top, 0.22, bot - top);
+        ctx.strokeStyle = b.def.burner ? '#c98a4a' : '#7ab0d0'; ctx.lineWidth = 0.035;
+        for (let k = 0; k < 5; k++) {
+          const yy = top + 0.1 + (((k * 0.27 + spin * 0.08) % 1.35 + 1.35) % 1.35);
+          if (yy > bot - 0.05) continue;
+          ctx.beginPath(); ctx.moveTo(cx - 0.11, yy); ctx.lineTo(cx + 0.11, yy - 0.08); ctx.stroke();
+        }
+        gearShape(ctx, cx, top, 0.2, 8, spin, b.def.burner ? '#9a7a52' : '#7a8a9a');
         if (work) {
           glow(ctx, cx, y + 1.25, 0.5, b.def.accent, 0.5 + Math.sin(t * 9) * 0.15);
           if (Math.random() < 0.06) this.particles.burst(cx + (Math.random() - 0.5), y + b.h - 0.2, 2, { color: '#7a6a5a', speed: 1, size: 0.2, max: 0.7, kind: 2, add: false, grow: 0.3 });

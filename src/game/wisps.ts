@@ -83,18 +83,43 @@ function approach(w: Wisp, x: number, y: number, dt: number, speed: number): boo
   return d < 0.5;
 }
 
-export function hasMaterials(g: Game, defId: string): boolean {
+/**
+ * Plans crafting of `defId` from the hero's inventory, recursively hand-crafting missing intermediates
+ * (gears, coils, circuits, building kits). Returns the raw items to consume, or null if impossible.
+ */
+export function planCraft(g: Game, itemId: string, count = 1): Map<string, number> | null {
+  const have = new Map<string, number>();
   const inv = g.player.inv;
-  if (inv.count(defId) > 0) return true;
-  const r = RECIPE_MAP.get(defId);
-  return !!r && g.research.isUnlocked(defId) && r.inputs.every((s) => inv.count(s.item) >= s.count);
+  const take = new Map<string, number>();
+  const avail = (id: string) => (have.has(id) ? have.get(id)! : inv.count(id));
+  const need = (id: string, n: number, depth: number): boolean => {
+    const a = avail(id);
+    const use = Math.min(a, n);
+    if (use > 0) { have.set(id, a - use); take.set(id, (take.get(id) ?? 0) + use); n -= use; }
+    if (n <= 0) return true;
+    if (depth > 3) return false;
+    const r = RECIPE_MAP.get(id);
+    if (!r || !r.handcraft || !g.research.isUnlocked(r.id)) return false;
+    const per = r.outputs.find((o) => o.item === id)?.count ?? 1;
+    const times = Math.ceil(n / per);
+    for (const s of r.inputs) if (!need(s.item, s.count * times, depth + 1)) return false;
+    // surplus output from batch crafting goes back to the inventory
+    const surplus = times * per - n;
+    if (surplus > 0) take.set(`+${id}`, (take.get(`+${id}`) ?? 0) + surplus);
+    return true;
+  };
+  return need(itemId, count, 0) ? take : null;
+}
+
+export function hasMaterials(g: Game, defId: string): boolean {
+  return planCraft(g, defId) !== null;
 }
 
 export function consumeMaterials(g: Game, defId: string): boolean {
+  const plan = planCraft(g, defId);
+  if (!plan) return false;
   const inv = g.player.inv;
-  if (inv.remove(defId, 1)) return true;
-  const r = RECIPE_MAP.get(defId);
-  if (!r || !r.inputs.every((s) => inv.count(s.item) >= s.count)) return false;
-  for (const s of r.inputs) inv.remove(s.item, s.count);
+  for (const [id, n] of plan) if (!id.startsWith('+')) inv.remove(id, n);
+  for (const [id, n] of plan) if (id.startsWith('+')) inv.add(id.slice(1), n);
   return true;
 }

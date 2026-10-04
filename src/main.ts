@@ -9,6 +9,8 @@ import { UI } from './ui/ui';
 import { titleScreen } from './ui/panels/menus';
 import { browserStorage, decodeSave, encodeSave, listSlots, readSlot, restoreGame, serializeGame, snapshotPristine, writeSlot, type Pristine } from './save/save';
 import { validateContent } from './data/validate';
+import { spawnEnemy } from './game/combat';
+import { generateEquip } from './game/items';
 
 const canvas = document.getElementById('game') as HTMLCanvasElement;
 const root = document.getElementById('ui') as HTMLElement;
@@ -176,4 +178,8 @@ root.appendChild(titleScreen(ui, settings));
 requestAnimationFrame(frame);
 
 // expose for debugging & automated play-testing
-(window as unknown as { ef: unknown }).ef = { get game() { return game; }, ui, renderer, hooks };
+(window as unknown as { ef: unknown }).ef = {
+  get game() { return game; }, ui, renderer, hooks,
+  spawn: (id: string, x: number, y: number, level: number) => spawnEnemy(game!, game!.playerLevel(), id, x, y, { level }),
+  makeItem: (o: Parameters<typeof generateEquip>[1]) => generateEquip(game!.lootRng, o),
+};

@@ -23,9 +23,10 @@
 }
 
 * { box-sizing: border-box; }
-html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color: var(--text); font-family: var(--font-body); font-size: calc(13px * var(--ui-scale)); user-select: none; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color: var(--text); font-family: var(--font-body); font-size: 13px; user-select: none; }
+#ui, #console { zoom: var(--ui-scale); }
 canvas#game { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; cursor: crosshair; }
-#ui { position: fixed; inset: 0; pointer-events: none; }
+#ui { position: fixed; inset: 0; pointer-events: none; width: calc(100vw / var(--ui-scale)); height: calc(100vh / var(--ui-scale)); }
 #ui > * { pointer-events: auto; }
 button { font-family: var(--font-body); }
 .hidden { display: none !important; }

@@ -3,14 +3,17 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Emberforge: Ashes of the Lattice — an isometric action RPG fused with an industrial automation simulation.",
+  "description": "Emberforge: Ashes of the Lattice \u2014 an isometric action RPG fused with an industrial automation simulation.",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "bench": "vitest run tests/stress.test.ts",
-    "validate": "vitest run tests/content.test.ts"
+    "bench": "vitest run tests/stress.test.ts --silent=false",
+    "validate": "vitest run tests/content.test.ts",
+    "preview": "vite preview",
+    "builds": "vitest run tests/builds.test.ts --silent=false",
+    "playtest": "node scripts/playtest-ftue.mjs shots && node scripts/playtest-scenes.mjs shots"
   },
   "devDependencies": {
     "@types/node": "^26.6.4",

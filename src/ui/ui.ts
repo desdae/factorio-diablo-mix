@@ -15,7 +15,7 @@ import type { Audio } from '../audio/audio';
 import { Input, PAD, keyLabel } from '../input/input';
 import { itemIcon, skillIcon } from '../render/icons';
 import { RES_COLOR, T } from '../world/map';
-import { $, h, tip, tooltip } from './dom';
+import { $, h, tip, tooltip, uiZoom } from './dom';
 import { stackTooltip } from './tooltips';
 import { PANELS } from './panels/registry';
 import { Console } from './console';
@@ -143,6 +143,7 @@ export class UI {
     this.bannerT = 4;
   }
   dialog(who: string, text: string) {
+    if (this.game && !this.game.settings.subtitles) return;
     const d = $('dialog');
     d.classList.remove('hidden');
     (d.querySelector('.who') as HTMLElement).textContent = who;
@@ -288,7 +289,7 @@ export class UI {
       const sig = def.sig ? def.sig(this, this.panelArg) : String(g.time);
       if (sig !== this.lastSig) { this.lastSig = sig; this.refreshPanel(); }
     }
-    if (this.heldInv !== null) { const c = $('cursor-item') as HTMLImageElement; c.style.left = `${input.mouseX - 23}px`; c.style.top = `${input.mouseY - 23}px`; }
+    if (this.heldInv !== null) { const c = $('cursor-item') as HTMLImageElement; const z = uiZoom(); c.style.left = `${input.mouseX / z - 23}px`; c.style.top = `${input.mouseY / z - 23}px`; }
     return inp;
   }
 
@@ -607,7 +608,7 @@ export class UI {
       ctx.fillRect(sx - (e.def.boss ? 3 : 1.5), sy - (e.def.boss ? 3 : 1.5), e.def.boss ? 6 : 3, e.def.boss ? 6 : 3);
     }
     for (const p of m.pois) {
-      if (!p.discovered && p.kind !== 'dungeon' && p.kind !== 'hive') continue;
+      if (!p.discovered && p.kind !== 'dungeon' && p.kind !== 'hive' && p.kind !== 'settlement') continue;
       const [sx, sy] = toS(p.x + 0.5, p.y + 0.5);
       const col = { dungeon: '#ff8a3a', hive: '#c8ff5a', nest: '#c060ff', camp: '#a03030', ruin: '#d6b26a', settlement: '#7ae0c0', exit: '#7ad7ff', boss_arena: '#ff3a1a', treasure: '#ffd27a', shrine: '#ffd27a', spawn: '#ffffff' }[p.kind] ?? '#fff';
       if (p.kind === 'camp' && p.cleared) continue;

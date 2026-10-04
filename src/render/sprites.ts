@@ -67,9 +67,10 @@ const DRAW: Record<string, Painter> = {
   miner(ctx, W, H, P, color, accent) {
     plate(ctx, pad(P), pad(P), W - pad(P) * 2, H - pad(P) * 2, shade(color, -0.1), P * 0.12);
     plate(ctx, W * 0.18, -P * 0.6, W * 0.64, H * 0.75, color, P * 0.1);
-    // drill tower frame
-    ctx.strokeStyle = shade(color, -0.5); ctx.lineWidth = P * 0.06;
-    ctx.beginPath(); ctx.moveTo(W * 0.3, -P * 0.85); ctx.lineTo(W * 0.5, -P * 0.9); ctx.lineTo(W * 0.7, -P * 0.85); ctx.stroke();
+    // A-frame derrick struts
+    ctx.strokeStyle = shade(color, -0.45); ctx.lineWidth = P * 0.07; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(W * 0.24, H * 0.2); ctx.lineTo(W * 0.5, -P * 0.85); ctx.lineTo(W * 0.76, H * 0.2); ctx.stroke();
+    ctx.lineWidth = P * 0.04; ctx.beginPath(); ctx.moveTo(W * 0.33, -P * 0.2); ctx.lineTo(W * 0.67, -P * 0.2); ctx.stroke();
     for (const [x, y] of [[0.24, -0.45], [0.76, -0.45], [0.24, 0.5], [0.76, 0.5]]) rivet(ctx, W * x, y * P + (y > 0 ? H * 0.2 : 0), P * 0.05);
     ctx.fillStyle = rgba(accent, 0.8); ctx.fillRect(W * 0.3, H * 0.6, W * 0.4, P * 0.08);
   },

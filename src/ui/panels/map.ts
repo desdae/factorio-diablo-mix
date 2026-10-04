@@ -55,8 +55,8 @@ export const mapPanel: PanelDef = {
     cv.addEventListener('wheel', (e) => { e.preventDefault(); st.zoom = Math.max(1, Math.min(24, (st.zoom as number) * (e.deltaY > 0 ? 0.85 : 1.18))); }, { passive: false });
     cv.addEventListener('mousedown', (e) => {
       if (e.button === 2) {
-        const r = cv.getBoundingClientRect(); const z = st.zoom as number;
-        const wx = (st.cx as number) + (e.clientX - r.left - W / 2) / z, wy = (st.cy as number) + (e.clientY - r.top - H / 2) / z;
+        const r = cv.getBoundingClientRect(); const z = st.zoom as number; const uz = r.width / W;
+        const wx = (st.cx as number) + ((e.clientX - r.left) / uz - W / 2) / z, wy = (st.cy as number) + ((e.clientY - r.top) / uz - H / 2) / z;
         const near = g.markers.findIndex((mk) => Math.hypot(mk.x - wx, mk.y - wy) < 6 / z + 1);
         if (near >= 0) g.markers.splice(near, 1); else g.markers.push({ x: wx, y: wy, label: `Marker ${g.markers.length + 1}` });
         return;
