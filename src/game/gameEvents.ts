@@ -15,7 +15,7 @@ export interface FxEvent {
 }
 
 export interface GameEvents {
-  hit: { x: number; y: number; amount: number; crit: boolean; type: DmgType; target: 'enemy' | 'player' | 'building'; map: string; text?: string };
+  hit: { x: number; y: number; amount: number; crit: boolean; type: DmgType; target: 'enemy' | 'player' | 'building'; map: string; text?: string; src?: string };
   kill: { enemy: Enemy };
   fx: FxEvent;
   sfx: { name: string; x?: number; y?: number; vol?: number };

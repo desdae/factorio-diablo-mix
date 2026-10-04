@@ -153,7 +153,7 @@ export function generateOverworld(opts: WorldGenOptions): GameMap {
   }
   map.pois = pois;
 
-  // ── Roads: guarantee reachability of every POI from the settlement
+  // ── Roads: a spanning network (each POI joins its nearest connected neighbour) guarantees reachability
   const carve = (ax: number, ay: number, bx: number, by: number) => {
     let x = ax, y = ay;
     let guard = 0;
@@ -172,12 +172,27 @@ export function generateOverworld(opts: WorldGenOptions): GameMap {
           map.tree[i] = 0;
           map.prop[i] = 0;
           if (t === T.Water || t === T.Lava) map.terrain[i] = T.Bridge;
-          else if (t === T.Rock) map.terrain[i] = T.Road;
-          else if (Math.abs(ox) + Math.abs(oy) <= 1 && t !== T.Plaza && t !== T.Hive && map.res[i] === 0) map.terrain[i] = T.Road;
+          else if (t === T.Rock) map.terrain[i] = ox === 0 && oy === 0 ? T.Road : T.Rubble;
+          else if (ox === 0 && oy === 0 && t !== T.Plaza && t !== T.Hive && map.res[i] === 0) map.terrain[i] = T.Road;
         }
     }
   };
-  for (const p of pois) if (p.kind !== 'settlement') carve(sx, sy, p.x, p.y);
+  const connected: { x: number; y: number }[] = [{ x: sx, y: sy }];
+  const pending = pois.filter((p) => p.kind !== 'settlement' && p.kind !== 'spawn');
+  // the spawn gets a direct road to the settlement
+  carve(sx, sy, cx, cy);
+  connected.push({ x: cx, y: cy });
+  while (pending.length) {
+    let bi = 0, bj = 0, bd = Infinity;
+    for (let i = 0; i < pending.length; i++)
+      for (let j = 0; j < connected.length; j++) {
+        const d = (pending[i].x - connected[j].x) ** 2 + (pending[i].y - connected[j].y) ** 2;
+        if (d < bd) { bd = d; bi = i; bj = j; }
+      }
+    const p = pending.splice(bi, 1)[0];
+    carve(connected[bj].x, connected[bj].y, p.x, p.y);
+    connected.push({ x: p.x, y: p.y });
+  }
 
   validateReachability(map, sx, sy);
   return map;

@@ -8,7 +8,7 @@ export const ATTR_KEYS: (keyof Attributes)[] = ['str', 'dex', 'int', 'vit', 'wil
 export const ATTR_DESC: Record<keyof Attributes, string> = {
   str: '+0.8% damage, +1 armor', dex: '+0.4% attack speed, +0.15% evasion', int: '+1% elemental damage, +0.2% resistances',
   vit: '+5 life, +0.05 life/s', wil: '+0.8% resolve generation, +0.4% cooldown reduction', pre: '+0.15% crit chance, +1% crit damage',
-  eng: '+1.2% turret damage, +0.6% machine speed near you, +1% mining speed',
+  eng: '+0.6% turret damage, +0.6% machine speed near you, +1% mining speed',
 };
 
 export interface DerivedStats {
@@ -70,7 +70,7 @@ export function computeStats(level: number, base: Attributes, gear: Partial<Reco
     wMin: weapon?.dmg?.[0] ?? 3, wMax: weapon?.dmg?.[1] ?? 6, aps: wb?.aps ?? 1.4, reach: (wb?.reach ?? 1) * 1.9,
     flat: { physical: g('flatPhys'), fire: g('flatFire'), frost: g('flatFrost'), lightning: g('flatLightning') },
     inc: {
-      all: g('dmgPct') + attrs.str * 0.8 + buffs.dmg,
+      all: g('dmgPct') + attrs.str * 0.8 + buffs.dmg + (level - 1) * 4,
       physical: g('physPct'), fire: g('firePct') + attrs.int, frost: g('frostPct') + attrs.int, lightning: g('lightningPct') + attrs.int,
     },
     convertFire: Math.min(100, g('convertFire')),
@@ -84,7 +84,7 @@ export function computeStats(level: number, base: Attributes, gear: Partial<Reco
     dodge: Math.min(40, g('dodge') + attrs.dex * 0.15),
     bleed: g('bleedChance'), ignite: g('igniteChance'), chill: g('chillChance'), shock: g('shockChance'),
     aoe: g('aoe'), stunDur: g('stunDur'),
-    turretDmg: g('turretDmg') + attrs.eng * 1.2,
+    turretDmg: g('turretDmg') + attrs.eng * 0.6,
     machineSpeed: g('machineSpeed') + attrs.eng * 0.6,
     drones: 2 + techDrones + g('drones'),
     mineSpeed: g('mineSpeed') + attrs.eng,

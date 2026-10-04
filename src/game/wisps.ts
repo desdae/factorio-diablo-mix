@@ -53,6 +53,8 @@ export function updateWisps(g: Game, dt: number) {
             const b = f.place(gh.def, gh.x, gh.y, gh.dir);
             if (b) {
               if (gh.recipe && (b.kind === 'assembler' || b.kind === 'forge')) f.setRecipe(b, gh.recipe);
+              if (gh.filter) b.filter = gh.filter;
+              if (gh.cond) b.cond = { ...gh.cond };
               g.events.emit('fx', { kind: 'build', x: b.x + b.w / 2, y: b.y + b.h / 2, r: Math.max(b.w, b.h) / 2, map: 'overworld' });
               g.events.emit('sfx', { name: 'build', x: b.x, y: b.y, vol: 0.5 });
               g.quests.onBuild(b.def.id);

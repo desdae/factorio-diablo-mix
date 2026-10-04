@@ -88,7 +88,7 @@ export interface ResearchHook {
   addUnits(n: number): void;
 }
 
-export interface GhostEntry { def: string; x: number; y: number; dir: number; recipe?: string | null }
+export interface GhostEntry { def: string; x: number; y: number; dir: number; recipe?: string | null; filter?: string | null; cond?: { item: string; lt: number } | null }
 
 export const BEACON_STAGES: { name: string; needs: Record<string, number> }[] = [
   { name: 'Foundation Ring', needs: { brick: 400, steel: 200 } },
@@ -146,8 +146,8 @@ export class Factory {
     return { ok: true };
   }
 
-  place(defId: string, x: number, y: number, dir: number): Building | null {
-    if (!this.canPlace(defId, x, y, dir).ok) return null;
+  place(defId: string, x: number, y: number, dir: number, force = false): Building | null {
+    if (!force && !this.canPlace(defId, x, y, dir).ok) return null;
     const def = buildingDef(defId);
     const { w, h } = this.footprint(defId, dir);
     const b: Building = {

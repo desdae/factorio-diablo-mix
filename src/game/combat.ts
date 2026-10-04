@@ -58,7 +58,7 @@ export function hitEnemy(g: Game, lvl: Level, e: Enemy, p: DamagePacket): number
   let mult = 1;
   if (e.st.shock > 0) mult *= 1.2;
   if (e.st.stun > 0 && p.source === 'player' && pl.hasMod('slam', 'tremor')) mult *= 1.25;
-  if (p.source === 'turret' && e.st.mark > 0) mult *= 1.6;
+  if (p.source === 'turret' && e.st.mark > 0) mult *= 1.4;
   if (p.source === 'player') mult *= g.diff.playerDmg;
   // frontal shield
   let blocked = false;
@@ -85,7 +85,7 @@ export function hitEnemy(g: Game, lvl: Level, e: Enemy, p: DamagePacket): number
   e.hp -= total;
   e.hitFlash = 0.12;
   e.aggro = true;
-  g.events.emit('hit', { x: e.x, y: e.y - e.r - 0.4, amount: total, crit: !!p.crit, type: maxType, target: 'enemy', map: lvl.map.kind, text: blocked ? 'Blocked' : undefined });
+  g.events.emit('hit', { x: e.x, y: e.y - e.r - 0.4, amount: total, crit: !!p.crit, type: maxType, target: 'enemy', map: lvl.map.kind, text: blocked ? 'Blocked' : undefined, src: p.source });
   if (blocked) g.events.emit('fx', { kind: 'sparks', x: e.x + Math.cos(e.facing) * e.r, y: e.y + Math.sin(e.facing) * e.r, color: '#ffd27a', map: lvl.map.kind });
   // statuses
   const rng = g.rng;

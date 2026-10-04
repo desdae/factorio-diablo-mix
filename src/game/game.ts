@@ -35,6 +35,8 @@ export interface GameOptions {
   difficulty?: string;
   worldMods?: Partial<WorldMods>;
   settings?: Settings;
+  /** world edge length in tiles (default 224); larger worlds for benchmarks */
+  size?: number;
 }
 
 export interface CraftJob { recipe: string; t: number; total: number }
@@ -96,7 +98,7 @@ export class Game {
     this.settings = o.settings ?? { ...DEFAULT_SETTINGS };
     this.rng = new Rng(this.seed ^ 0xa5a5a5);
     this.lootRng = new Rng(this.seed ^ 0x1337);
-    this.overworld = generateOverworld({ seed: this.seed, resourceRichness: this.diff.resourceRich * (this.worldMods.scarce ? 0.5 : 1) });
+    this.overworld = generateOverworld({ seed: this.seed, size: o.size, resourceRichness: this.diff.resourceRich * (this.worldMods.scarce ? 0.5 : 1) });
     this.over = new Level(this.overworld);
     this.factory = new Factory(this.overworld);
     this.power = new PowerGrid(this.factory);

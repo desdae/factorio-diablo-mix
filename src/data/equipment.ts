@@ -145,7 +145,7 @@ export const AFFIXES: AffixDef[] = [
   A({ id: 'chill', stat: 'chillChance', groups: ['weapon', 'jewel'], min: 5, max: 30, weight: 4, integer: true }),
   A({ id: 'shock', stat: 'shockChance', groups: ['weapon', 'jewel'], min: 5, max: 30, weight: 4, integer: true }),
   A({ id: 'aoe', stat: 'aoe', groups: ['weapon', 'jewel', 'armor'], slots: ['mainhand', 'amulet', 'helmet', 'relic'], min: 5, max: 30, weight: 4, integer: true }),
-  A({ id: 'turret', stat: 'turretDmg', groups: ['weapon', 'armor', 'jewel'], min: 8, max: 50, weight: 5, integer: true }),
+  A({ id: 'turret', stat: 'turretDmg', groups: ['weapon', 'armor', 'jewel'], min: 6, max: 35, weight: 5, integer: true }),
   A({ id: 'machine', stat: 'machineSpeed', groups: ['armor', 'jewel'], min: 5, max: 30, weight: 4, integer: true }),
   A({ id: 'drones', stat: 'drones', groups: ['jewel', 'armor'], slots: ['relic', 'amulet', 'body'], min: 1, max: 3, weight: 2, integer: true }),
   A({ id: 'mine', stat: 'mineSpeed', groups: ['armor', 'jewel'], slots: ['gloves', 'ring', 'relic'], min: 15, max: 80, weight: 4, integer: true }),
@@ -166,7 +166,7 @@ export interface LegendaryDef {
 
 /** Legendary powers transform skills or bridge combat and industry. Checked by id in gameplay code. */
 export const LEGENDARIES: LegendaryDef[] = [
-  { id: 'leg_mark', title: 'Overseer\'s', name: 'Targeting Mandate', desc: 'Rending Cleave marks enemies for 6s. Your turrets deal +60% damage to marked enemies.', groups: ['weapon', 'jewel'] },
+  { id: 'leg_mark', title: 'Overseer\'s', name: 'Targeting Mandate', desc: 'Rending Cleave marks enemies for 6s. Your turrets deal +40% damage to marked enemies.', groups: ['weapon', 'jewel'] },
   { id: 'leg_rushfire', title: 'Kiln-Stride', name: 'Kiln Stride', desc: 'Shield Rush leaves a trail of fire that burns for 4s.', groups: ['armor'], slots: ['boots', 'offhand'] },
   { id: 'leg_doubleslam', title: 'Twinquake', name: 'Echoing Fault', desc: 'Quake Slam strikes a second time 0.5s later.', groups: ['weapon', 'armor'], slots: ['mainhand', 'gloves'] },
   { id: 'leg_overclock', title: 'Foreman\'s', name: 'Foreman\'s Bellow', desc: 'Rally Horn always overclocks machines within 12 tiles by +100% for 10s.', groups: ['armor', 'jewel'], slots: ['helmet', 'amulet'] },
