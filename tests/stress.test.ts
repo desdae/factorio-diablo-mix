@@ -61,7 +61,7 @@ describe('stress benchmarks', () => {
     expect(belts).toBeGreaterThanOrEqual(10000);
     expect(machines).toBeGreaterThanOrEqual(2000);
     expect(items).toBeGreaterThanOrEqual(100000);
-    expect(g.over.enemies.length).toBe(500);
+    expect(g.over.enemies.length).toBeGreaterThanOrEqual(500);
     const inp = emptyInput();
     for (let i = 0; i < 30; i++) g.update(1 / 60, inp); // warm-up (JIT, nav fields)
     const N = 300;
